@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>ssr-demo</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="/dist/build.js"></script>
-  </body>
+        {{{ meta.inject().title.text() }}}
+        {{{ meta.inject().meta.text() }}}
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="public/app.css">
+    </head>
+    <body>
+        <!--vue-ssr-outlet-->
+        <script src="public/app.js"></script>
+    </body>
 </html>
