@@ -4,7 +4,7 @@ const fs = require('fs');
 const vueServerRenderer = require('vue-server-renderer');
 const setupDevServer = require('./config/setup-dev-server');
 
-const port = 3000;
+const port = 8000;
 const app = express();
 
 const createRenderer = (bundle) =>
@@ -29,7 +29,7 @@ app.get('/', async (req, res) => {
     const context = {
         url: req.params['0'] || '/',
         state: {
-            title: 'Vue SSR Simple Setup',
+            title: 'Vue SSR Demo',
             users: []
         }
     };

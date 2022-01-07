@@ -3,7 +3,7 @@ import axios from 'axios';
 const WALLET_ADDRESS = '';     //  Use personal Ethereum wallet address
 
 const localAPI = axios.create({
-    baseURL: 'http://localhost:3000/', // should be set based on env
+    baseURL: 'http://localhost:8000/', // should be set based on env
 });
 
 //    Work in progress... doesn't yet display any data on UI
