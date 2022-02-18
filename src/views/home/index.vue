@@ -3,11 +3,13 @@
     <router-link to="/about">Go to About page</router-link>
     <users-list :users="users"></users-list>
     <button @click="fetchCollection">Fetch Collection</button>
+    <button @click="logout" v-if="isLoggedIn">Logout</button>
+    <a href="/api/spotify/login" v-else>Spotify Login</a>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import UsersList from "./components/users-list/index.vue";
 
 export default {
@@ -23,6 +25,9 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      isLoggedIn: (state) => state.isLoggedIn,
+    }),
     ...mapGetters({
       users: "users",
     }),
@@ -37,10 +42,35 @@ export default {
   },
 
   // Client-side only
+  created() {
+    // let tokenData = this.localStorage.tokenData;
+    let tokenData;
+    if (this.$route.hash && !tokenData) {
+      const hash = this.$route.hash.substr(1);
+
+      hash.split("&").forEach((item) => {
+        const [key, value] = item.split("=");
+        tokenData = {
+          ...tokenData,
+          [key]: value,
+        };
+      });
+
+      // this.localStorage.tokenData = JSON.stringify(tokenData);
+      this.updateAuth(tokenData);
+    } else {
+      this.updateAuth(tokenData);
+    }
+  },
+
   mounted() {
     // If we didn't already do it on the server, we fetch the users
     if (!this.users.length) {
       this.fetchUsers();
+    }
+
+    if (this.$route.hash) {
+      this.$router.push("/");
     }
   },
 
@@ -53,6 +83,12 @@ export default {
     },
     fetchCollection() {
       this.getCollections();
+    },
+    updateAuth(tokenData) {
+      this.$store.dispatch("updateSpotifyAuth", tokenData);
+    },
+    logout() {
+      this.$store.dispatch("logout");
     },
   },
 };

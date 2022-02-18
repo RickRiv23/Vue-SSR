@@ -1,6 +1,9 @@
 import {Store} from 'vuex'
 
 import api from '../api';
+const state = {
+    isLoggedIn: false,
+};
 
 const actions = {
     getUsers: ({ commit }) =>{
@@ -12,6 +15,14 @@ const actions = {
             .then(response => {
                 commit('setCollections', response);
             });
+    },
+    updateSpotifyAuth: ({ commit }, tokenData) => {
+      if(tokenData){
+        commit('spotifyLoginSuccess', tokenData);
+      }
+    },
+    logout: ({ commit }) => {
+        commit('logout');
     }
 };
 
@@ -22,6 +33,14 @@ const mutations = {
     setCollections: (state, collections) => {
         state.collections = collections;
         console.log('Store collections', state.collections);
+    },
+    spotifyLoginSuccess: (state, payload) => {
+        state.spotifyAuth = payload;
+        state.isLoggedIn = true;
+    },
+    logout: (state) => {
+        state.isLoggedIn = false;
+        state.spotifyAuth = null;
     }
 };
 
