@@ -1,12 +1,30 @@
-const axios = require('axios');
+const { generateRandomString } = require('../../utils');
+
+const scopes = [
+  "user-read-private",
+  "user-read-email",
+  "user-read-playback-state",
+  "user-read-currently-playing",
+  "user-read-recently-played",
+  "user-top-read",
+  "user-read-playback-position",
+  "user-follow-modify",
+  "user-follow-read",
+  "user-library-read",
+  "streaming",
+  "app-remote-control",
+];
+
+const params = {
+    client_id: process.env.CLIENT_ID,
+    redirect_uri: process.env.REDIRECT_URI,
+    response_type: "code",
+    scope: scopes,
+    show_dialog: true,
+    state: generateRandomString(16)
+};
 
 module.exports = {
-  fetchLogin: () => {
-    const CLIENT_ID = "439743d6abdd4dc59afe80c1886e73d6",
-        REDIRECT_URI = "http://localhost:8000",
-        AUTH_END_POINT = "https://accounts.spotify.com/authorize",
-        RESPONSE_TYPE = "token";
-
-    return `${AUTH_END_POINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`;
-  }
+  getScopes: scopes,
+  getParams: params
 };
