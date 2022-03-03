@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <h1>{{ msg }}</h1>
+    <!-- <h1>{{ msg }}</h1> -->
     <div class="main">
       <h1>{{ title }}</h1>
       <router-view></router-view>
@@ -14,11 +14,6 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "App",
-  data() {
-    return {
-      msg: "Welcome to Your Vue.js App",
-    };
-  },
   metaInfo: {
     meta: [{ charset: "utf-8" }],
   },
