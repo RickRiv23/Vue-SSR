@@ -1,11 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const vueServerRenderer = require('vue-server-renderer');
 const setupDevServer = require('../config/setup-dev-server');
+require('dotenv').config();
 
 
 const app = express();
+app.use(cors());
 
 const createRenderer = (bundle) =>
     vueServerRenderer.createBundleRenderer(bundle, {
@@ -36,8 +39,10 @@ app.get('/', async (req, res) => {
     const context = {
         url: req.params['0'] || '/',
         state: {
+          app: {
             title: 'Vue SSR Demo',
             users: []
+          }
         }
     };
     let html;
