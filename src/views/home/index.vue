@@ -1,9 +1,10 @@
 <template>
   <div>
-    <router-link to="/about">Go to About page</router-link>
+    <router-link to="/spotify">Go to Spotify page</router-link>
     <users-list :users="users"></users-list>
     <button @click="fetchCollection">Fetch Collection</button>
     <button @click="logout" v-if="isLoggedIn">Logout</button>
+    <!-- <button type="button" @click="login" v-else>Spotify Login</button> -->
     <a href="/api/spotify/login" v-else>Spotify Login</a>
   </div>
 </template>
@@ -25,71 +26,61 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      isLoggedIn: (state) => state.isLoggedIn,
+    ...mapGetters(["users", "isLoggedIn"]),
+  },
+
+  data() {
+    return {
+      tokenHolder: null,
+      routeQuery: () => {
+        return this.$route.query;
+      },
+    };
+  },
+
+  methods: {
+    ...mapActions({
+      getCollections: "getCollections",
+      // login: "login",
+      fetchUsers: "getUsers",
+      updateAuth: "setAuthData",
+      logout: "logout",
     }),
-    ...mapGetters({
-      users: "users",
-    }),
+    fetchCollection() {
+      this.getCollections();
+    },
   },
 
   // Server-side only
-  // This will be called by the server renderer automatically
   serverPrefetch() {
-    // return the Promise from the action
-    // so that the component waits before rendering
+    // return the Promise from the action so that the component waits before rendering
     return this.fetchUsers();
   },
 
-  // Client-side only
   created() {
-    // let tokenData = this.localStorage.tokenData;
-    let tokenData;
-    if (this.$route.hash && !tokenData) {
-      const hash = this.$route.hash.substr(1);
+    const hasSuccess = this.routeQuery.success || false;
+    if (hasSuccess) {
+      const { access_token, expires_in, refresh_token } = this.routeQuery;
 
-      hash.split("&").forEach((item) => {
-        const [key, value] = item.split("=");
-        tokenData = {
-          ...tokenData,
-          [key]: value,
-        };
-      });
-
-      // this.localStorage.tokenData = JSON.stringify(tokenData);
-      this.updateAuth(tokenData);
-    } else {
-      this.updateAuth(tokenData);
+      this.updateAuth({ access_token, expires_in, refresh_token });
     }
   },
 
+  // Client-side only
+  beforeMount() {
+    if (!this.isLoggedIn && this.routeQuery) {
+      window.localStorage.setItem("token", { ...this.routeQuery });
+    }
+  },
   mounted() {
     // If we didn't already do it on the server, we fetch the users
     if (!this.users.length) {
       this.fetchUsers();
     }
 
-    if (this.$route.hash) {
-      this.$router.push("/");
+    if (this.routeQuery !== null) {
+      this.$router.push({ path: "/", query: null });
     }
-  },
-
-  methods: {
-    ...mapActions({
-      getCollections: "getCollections",
-    }),
-    fetchUsers() {
-      return this.$store.dispatch("getUsers");
-    },
-    fetchCollection() {
-      this.getCollections();
-    },
-    updateAuth(tokenData) {
-      this.$store.dispatch("updateSpotifyAuth", tokenData);
-    },
-    logout() {
-      this.$store.dispatch("logout");
-    },
   },
 };
 </script>
