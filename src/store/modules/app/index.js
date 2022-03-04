@@ -48,7 +48,6 @@ const getters = {
 };
 
 const appStore = {
-  // namespaced: true,
   state,
   actions,
   mutations,

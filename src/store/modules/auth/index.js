@@ -1,10 +1,12 @@
 import api from '../../../api';
 
-const state = {
+const initialState = {
   accessToken: "",
   refreshToken: "",
   expiryTime: ""
 };
+
+const state = initialState;
 
 const actions = {
   login: async function() {
@@ -34,11 +36,13 @@ const actions = {
     }
   },
 
-  logout: () => {
-    let script = document.createElement("script");
+  logout: ({ commit }) => {
+    // let script = document.createElement("script");
 
-    script.src = "https://www.spotify.com/logout/";
-    document.getElementById("app").appendChild(script);
+    // script.src = "https://www.spotify.com/logout/";
+    // document.getElementById("app").appendChild(script);
+
+    commit("LOGOUT");
 
     window.localStorage.clear();
     window.sessionStorage.clear();
@@ -48,36 +52,53 @@ const actions = {
     }, 1000);
   },
 
+  initializeAuthData: ({ commit }) => {
+    const tokenData = localStorage.getItem("tokenData") || null;
+    if(tokenData) {
+      const data = JSON.parse(tokenData);
+      commit("SET_AUTH_DATA", data);
+    }
+  },
+
   setAuthData({ commit }, data) {
-    commit("SET_ACCESS_TOKEN", data.access_token);
-    commit("SET_REFRESH_TOKEN", data.refresh_token);
-    commit("SET_EXPIRY_TIME", data.expires_in);
+    commit("SET_AUTH_DATA", data);
   },
 
-  setAccessToken({ commit }, token) {
-    commit("SET_ACCESS_TOKEN", token);
-  },
+  // setAccessToken({ commit }, token) {
+  //   commit("SET_ACCESS_TOKEN", token);
+  // },
 
-  setRefreshToken({ commit }, token) {
-    commit("SET_REFRESH_TOKEN", token);
-  },
+  // setRefreshToken({ commit }, token) {
+  //   commit("SET_REFRESH_TOKEN", token);
+  // },
 
-  setExpiryTime({ commit }, time) {
-    commit("SET_EXPIRY_TIME", time);
-  }
+  // setExpiryTime({ commit }, time) {
+  //   commit("SET_EXPIRY_TIME", time);
+  // }
 };
 
 const mutations = {
-  SET_ACCESS_TOKEN(state, token) {
-    state.accessToken = token;
+  // SET_ACCESS_TOKEN(state, token) {
+  //   state.accessToken = token;
+  // },
+
+  // SET_REFRESH_TOKEN(state, token) {
+  //   state.refreshToken = token;
+  // },
+
+  // SET_EXPIRY_TIME(state, time) {
+  //   state.expiryTime = time;
+  // },
+
+  SET_AUTH_DATA(state, data) {
+    state.accessToken = data.access_token;
+    state.refreshToken = data.refresh_token;
+    state.expiryTime = data.expires_in;
+    localStorage.setItem("tokenData", JSON.stringify(data));
   },
 
-  SET_REFRESH_TOKEN(state, token) {
-    state.refreshToken = token;
-  },
-
-  SET_EXPIRY_TIME(state, time) {
-    state.expiryTime = time;
+  LOGOUT(state) {
+    state = initialState;
   }
 };
 
@@ -91,7 +112,6 @@ const getters = {
 };
 
 const authStore =  {
-  // namespaced: true,
   state,
   mutations,
   getters,

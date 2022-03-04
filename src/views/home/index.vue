@@ -11,7 +11,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-import UsersList from "./components/users-list/index.vue";
+import UsersList from "../../components/users-list/index.vue";
 
 export default {
   name: "Home",
@@ -31,10 +31,7 @@ export default {
 
   data() {
     return {
-      tokenHolder: null,
-      routeQuery: () => {
-        return this.$route.query;
-      },
+      routeQuery: this.$route.query,
     };
   },
 
@@ -45,9 +42,17 @@ export default {
       fetchUsers: "getUsers",
       updateAuth: "setAuthData",
       logout: "logout",
+      init: "initializeAuthData",
     }),
     fetchCollection() {
       this.getCollections();
+    },
+    checkQueryToken() {
+      const hasSuccess = this.routeQuery.success || false;
+      if (hasSuccess) {
+        const { access_token, expires_in, refresh_token } = this.routeQuery;
+        this.updateAuth({ access_token, expires_in, refresh_token });
+      }
     },
   },
 
@@ -58,20 +63,14 @@ export default {
   },
 
   created() {
-    const hasSuccess = this.routeQuery.success || false;
-    if (hasSuccess) {
-      const { access_token, expires_in, refresh_token } = this.routeQuery;
-
-      this.updateAuth({ access_token, expires_in, refresh_token });
-    }
+    this.checkQueryToken();
   },
 
   // Client-side only
   beforeMount() {
-    if (!this.isLoggedIn && this.routeQuery) {
-      window.localStorage.setItem("token", { ...this.routeQuery });
-    }
+    this.init();
   },
+
   mounted() {
     // If we didn't already do it on the server, we fetch the users
     if (!this.users.length) {
@@ -79,7 +78,7 @@ export default {
     }
 
     if (this.routeQuery !== null) {
-      this.$router.push({ path: "/", query: null });
+      this.$router.replace({ query: null });
     }
   },
 };
