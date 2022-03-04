@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import About from '../views/about/index.vue';
+import Spotify from '../views/spotify/index.vue';
 import Home from '../views/home/index.vue';
 
 Vue.use(Router);
@@ -15,9 +15,9 @@ export function createRouter () {
                 name: 'home'
             },
             {
-                path: '/about',
-                component: About,
-                name: 'about'
+                path: '/spotify',
+                component: Spotify,
+                name: 'spotify'
             },
         ]
     });
