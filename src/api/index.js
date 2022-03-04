@@ -1,17 +1,20 @@
 import axios from 'axios';
 
-const localAPI = axios.create({
-    baseURL: 'http://localhost:8000/', // should be set based on env
+const api = axios.create({
+    baseURL: 'http://localhost:8000', // should be set based on env
 });
 
 //    Work in progress... doesn't yet display any data on UI
 const getCollections = async () => {
-    return localAPI.get('/api/opensea').then(res => { return res.data }).catch(e => console.log(e));
+    return api.get('/api/opensea').then(res => { return res.data }).catch(e => console.log(e));
 };
 
-const getUsers = () => localAPI.get('/users');
+const getUsers = () => api.get('/users');
+
+const spotifyLogin = async () => await api.get('/api/spotify/login');
 
 export default {
     getUsers,
-    getCollections
+    getCollections,
+    spotifyLogin
 };
