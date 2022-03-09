@@ -30,11 +30,6 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      // isLoggedIn: (state) => {
-      //   return (state.auth.accessToken && state.auth.refreshToken && state.expiryTime) ? true : false;
-      // },
-    }),
     ...mapGetters(["users", "isLoggedIn"]),
   },
 
@@ -88,8 +83,6 @@ export default {
     if (this.routeQuery !== null) {
       this.$router.replace({ query: null });
     }
-
-    console.log("CheckLogin", this.isLoggedIn);
   },
 };
 </script>
