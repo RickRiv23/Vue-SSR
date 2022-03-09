@@ -1,17 +1,20 @@
 <template>
-  <div>
-    <router-link to="/spotify">Go to Spotify page</router-link>
-    <users-list :users="users"></users-list>
-    <button @click="fetchCollection">Fetch Collection</button>
-    <button @click="logout" v-if="isLoggedIn">Logout</button>
-    <!-- <button type="button" @click="login" v-else>Spotify Login</button> -->
-    <a href="/api/spotify/login" v-else>Spotify Login</a>
+  <div class="app-wrapper">
+    <template v-if="this.isLoggedIn">
+      <Spotify></Spotify>
+    </template>
+    <template v-else>
+      <users-list :users="users"></users-list>
+      <button @click="fetchCollection">Fetch Collection</button>
+      <a href="/api/spotify/login">Spotify Login</a>
+    </template>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import UsersList from "../../components/users-list/index.vue";
+import Spotify from "../../components/spotify/index.vue";
 
 export default {
   name: "Home",
@@ -23,9 +26,15 @@ export default {
 
   components: {
     UsersList,
+    Spotify,
   },
 
   computed: {
+    ...mapState({
+      // isLoggedIn: (state) => {
+      //   return (state.auth.accessToken && state.auth.refreshToken && state.expiryTime) ? true : false;
+      // },
+    }),
     ...mapGetters(["users", "isLoggedIn"]),
   },
 
@@ -38,7 +47,6 @@ export default {
   methods: {
     ...mapActions({
       getCollections: "getCollections",
-      // login: "login",
       fetchUsers: "getUsers",
       updateAuth: "setAuthData",
       logout: "logout",
@@ -80,6 +88,8 @@ export default {
     if (this.routeQuery !== null) {
       this.$router.replace({ query: null });
     }
+
+    console.log("CheckLogin", this.isLoggedIn);
   },
 };
 </script>

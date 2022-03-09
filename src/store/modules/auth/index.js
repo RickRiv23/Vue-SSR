@@ -107,7 +107,7 @@ const getters = {
   getRefreshToken: state => state.refreshToken,
   getExpiryTime: state => state.expiryTime,
   isLoggedIn: state => {
-    return state.accessToken && state.refreshToken && state.expiryTime;
+    return (state.accessToken && state.refreshToken && state.expiryTime) ? true : false;
   }
 };
 

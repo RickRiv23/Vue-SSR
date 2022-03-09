@@ -1,10 +1,6 @@
 <template>
   <div>
-    <router-link to="/">Go to Home page</router-link>
-    <div v-if="this.isLoggedIn"></div>
-    <div v-else>
-      <a href="/api/spotify/login">Spotify Login</a>
-    </div>
+    <button @click="logout">Logout</button>
   </div>
 </template>
 
@@ -22,6 +18,11 @@ export default {
   computed: {
     ...mapState({
       isLoggedIn: (state) => state.isLoggedIn,
+    }),
+  },
+  methods: {
+    ...mapActions({
+      logout: "logout",
     }),
   },
 };
