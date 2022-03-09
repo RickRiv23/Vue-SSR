@@ -24,14 +24,19 @@ module.exports = {
       }
     );
   },
-  testSpotifyApi: async () => {
-    spotifyAPI.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE').then(
+  fetchPlaylists: async (ownerToken) => {},
+  fetchPlaylistTracks: async (playlistToken) => {},
+  fetchAlbums: async (artistToken) => {
+    await spotifyAPI.getArtistAlbums(artistToken).then(
       (data) => {
         console.log('Artist albums', data.body);
+        return data.body;
       },
       (err) => {
         console.error(err);
+        return err.statusCode;
       }
     );
-  }
+  },
+  fetchAlbumTracks: async (albumToken) => {},
 };
