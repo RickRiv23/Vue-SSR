@@ -39,10 +39,10 @@ app.get('/', async (req, res) => {
     const context = {
         url: req.params['0'] || '/',
         state: {
-          app: {
-            title: 'Vue SSR Demo',
-            users: []
-          }
+          // app: {
+            // title: 'Vue SSR Demo',
+            // users: []
+          // }
         }
     };
     let html;

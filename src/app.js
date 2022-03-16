@@ -2,8 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Meta from 'vue-meta'
 import App from './App.vue';
-import {createRouter} from './router';
+import { createRouter } from './router';
 import createStore from './store';
+import { sync } from 'vuex-router-sync';
 
 Vue.use(Vuex);
 Vue.use(Meta, {
@@ -11,14 +12,17 @@ Vue.use(Meta, {
 });
 
 export const createApp = (context) =>  {
-    const router = createRouter();
-    const store = createStore(context.state);
+  const state = context.state !== undefined ? context.state : {};
+  const router = createRouter();
+  const store = createStore(state);
 
-    const app = new Vue({
-        store,
-        router,
-        render: h => h(App),
-    });
+  sync(store, router);
 
-    return {app, router, store};
+  const app = new Vue({
+      store,
+      router,
+      render: h => h(App),
+  });
+
+  return { app, router, store };
 };

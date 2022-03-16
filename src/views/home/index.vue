@@ -3,11 +3,11 @@
     <template v-if="this.isLoggedIn">
       <Spotify></Spotify>
     </template>
-    <template v-else>
+    <div v-else>
       <users-list :users="users"></users-list>
       <button @click="fetchCollection">Fetch Collection</button>
       <a href="/api/spotify/login">Spotify Login</a>
-    </template>
+    </div>
   </div>
 </template>
 

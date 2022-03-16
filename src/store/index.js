@@ -7,11 +7,12 @@ import auth from './modules/auth';
 
 const createStore = (state) => {
     return new Store({
-        modules: {
-          app,
-          auth
-        },
-        strict: process.env.NODE_ENV !== 'production',
+      state,
+      modules: {
+        app,
+        auth
+      },
+      strict: process.env.NODE_ENV !== 'production',
     });
 };
 
