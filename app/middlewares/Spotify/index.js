@@ -2,6 +2,7 @@ const spotifyAPI = require('./api_init');
 const OAuth = require('./OAuth');
 
 module.exports = {
+  setToken: (token) => spotifyAPI.setAccessToken(token),
   getAuthEndpoint: spotifyAPI.createAuthorizeURL(OAuth.getScopes, OAuth.getParams),
   getAuthorization: async (code) => {
     return await spotifyAPI.authorizationCodeGrant(code).then(
@@ -27,16 +28,30 @@ module.exports = {
   fetchPlaylists: async (ownerToken) => {},
   fetchPlaylistTracks: async (playlistToken) => {},
   fetchAlbums: async (artistToken) => {
-    await spotifyAPI.getArtistAlbums(artistToken).then(
+    const response = await spotifyAPI.getArtistAlbums(artistToken).then(
       (data) => {
         console.log('Artist albums', data.body);
-        return data.body;
+        return data;
       },
       (err) => {
         console.error(err);
         return err.statusCode;
       }
     );
+    return response;
+  },
+  fetchAlbums: async (artistToken, config) => {
+    const response = await spotifyAPI.getArtistAlbums(artistToken, config).then(
+      (data) => {
+        console.log('Artist albums', data.body);
+        return data;
+      },
+      (err) => {
+        console.error(err);
+        return err.statusCode;
+      }
+    );
+    return response;
   },
   fetchAlbumTracks: async (albumToken) => {},
 };
