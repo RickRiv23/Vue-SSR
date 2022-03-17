@@ -1,8 +1,6 @@
 <template>
   <div class="app-wrapper">
-    <template v-if="this.isLoggedIn">
-      <Spotify></Spotify>
-    </template>
+    <Spotify v-if="this.isLoggedIn"></Spotify>
     <div v-else>
       <users-list :users="users"></users-list>
       <button @click="fetchCollection">Fetch Collection</button>
@@ -14,7 +12,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import UsersList from "../../components/users-list/index.vue";
-import Spotify from "../../components/spotify/index.vue";
+import Spotify from "../spotify/index.vue";
 
 export default {
   name: "Home",
@@ -55,6 +53,7 @@ export default {
       if (hasSuccess) {
         const { access_token, expires_in, refresh_token } = this.routeQuery;
         this.updateAuth({ access_token, expires_in, refresh_token });
+        this.$router.push("spotify");
       }
     },
   },
