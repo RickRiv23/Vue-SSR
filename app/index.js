@@ -35,7 +35,9 @@ app.use('/api/opensea', openSea);
 const spotify = require('./routes/Spotify');
 app.use('/api/spotify', spotify);
 
-app.get('/', async (req, res) => {
+const appRoutes = ['/', '/spotify'];
+
+app.get(appRoutes, async (req, res) => {
     const context = {
         url: req.params['0'] || '/',
         state: {
@@ -48,13 +50,13 @@ app.get('/', async (req, res) => {
     let html;
 
     try {
-        html = await renderer.renderToString(context);
+      html = await renderer.renderToString(context);
     } catch (error) {
-        if (error.code === 404) {
-            return res.status(404).send('404 | Page Not Found');
-        }
-        console.log(error);
-        return res.status(500).send('500 | Internal Server Error');
+      if (error.code === 404) {
+          return res.status(404).send('404 | Page Not Found');
+      }
+      console.log(error);
+      return res.status(500).send('500 | Internal Server Error');
     }
 
     res.end(html);
